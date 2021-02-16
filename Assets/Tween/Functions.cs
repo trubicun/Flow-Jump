@@ -31,6 +31,7 @@ namespace Tweeny
             EaseInOut,
             Spike,
             SpikeEaseInOut,
+            SpikeEaseOut
         }
 
         //Keep this names similar
@@ -44,6 +45,7 @@ namespace Tweeny
                 EaseInOut,
                 Spike,
                 SpikeEaseInOut,
+                SpikeEaseOut
         };
 
 
@@ -81,6 +83,14 @@ namespace Tweeny
                 return EaseInOut(val / .5f);
 
             return EaseInOut(Flip(val) / .5f);
+        }
+
+        public static float SpikeEaseOut(float val)
+        {
+            if (val <= .5f)
+                return EaseOut(val / .5f);
+
+            return EaseIn(Flip(val) / .5f);
         }
     }
 }

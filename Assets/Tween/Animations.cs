@@ -76,6 +76,96 @@ namespace Tweeny
                     yield return true;
                 } while (cicle);
             }
+
+            public static IEnumerator MoveAxis(FunctionHandler function, float duration, GameObject obj, params object[] param)
+            {
+                Vector3 point = GetParam<Vector3>(true, param);
+                Space space = GetParam<Space>(param);
+                Action action = GetParam<Action>(param);
+                Timer time = GetParam<Timer>(param);
+                bool cicle = GetParam<bool>(param);
+                Vector3 startPosition = GetStartPosition(obj, space);
+                do
+                {
+                    float timer = 0;
+                    Vector3 value;
+                    if (space == Space.World)
+                        if (action == Action.Straight)
+                            while (timer <= duration)
+                            {
+                                value = Vector3.Lerp(startPosition, point + startPosition, function(timer / duration));
+                                if (point.x != 0)
+                                {
+                                    obj.transform.position = new Vector3(value.x, obj.transform.position.y, obj.transform.position.z);
+                                }
+                                if (point.y != 0)
+                                {
+                                    obj.transform.position = new Vector3(obj.transform.position.x, value.y, obj.transform.position.z);
+                                }
+                                if (point.z != 0)
+                                {
+                                    obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, value.z);
+                                }
+                                yield return timer += TimeScale(time);
+                            }
+                        else
+                            while (timer <= duration)
+                            {
+                                value = Vector3.Lerp(Vector3.zero, point, function(timer / duration));
+                                if (point.x != 0)
+                                {
+                                    obj.transform.position += new Vector3(value.x, 0, 0);
+                                }
+                                if (point.y != 0)
+                                {
+                                    obj.transform.position += new Vector3(0, value.y, 0);
+                                }
+                                if (point.z != 0)
+                                {
+                                    obj.transform.position += new Vector3(0, 0, value.z);
+                                }
+                                yield return timer += TimeScale(time);
+                            }
+                    else
+                        if (action == Action.Straight)
+                        while (timer <= duration)
+                        {
+                            value = Vector3.Lerp(startPosition, point, function(timer / duration));
+                            if (point.x != 0)
+                            {
+                                obj.transform.localPosition = new Vector3(value.x, obj.transform.position.y, obj.transform.position.z);
+                            }
+                            if (point.y != 0)
+                            {
+                                obj.transform.localPosition = new Vector3(obj.transform.position.x, value.y, obj.transform.position.z);
+                            }
+                            if (point.z != 0)
+                            {
+                                obj.transform.localPosition = new Vector3(obj.transform.position.x, obj.transform.position.y, value.z);
+                            }
+                            yield return timer += TimeScale(time);
+                        }
+                    else
+                        while (timer <= duration)
+                        {
+                            value = Vector3.Lerp(Vector3.zero, point, function(timer / duration));
+                            if (point.x != 0)
+                            {
+                                obj.transform.localPosition += new Vector3(value.x, 0, 0);
+                            }
+                            if (point.y != 0)
+                            {
+                                obj.transform.localPosition += new Vector3(0, value.y, 0);
+                            }
+                            if (point.z != 0)
+                            {
+                                obj.transform.localPosition += new Vector3(0, 0, value.z);
+                            }
+                            yield return timer += TimeScale(time);
+                        }
+                    yield return true;
+                } while (cicle);
+            }
             public static IEnumerator Rotate(FunctionHandler function, float duration, GameObject obj, params object[] param)
             {
                 Quaternion point = Quaternion.Euler(GetParam<Vector3>(true, param));
@@ -142,98 +232,6 @@ namespace Tweeny
                     yield return true;
                 } while (cicle);
             }
-        }
-
-        public static IEnumerator MoveAxis(FunctionHandler function, float duration, GameObject obj, params object[] param)
-        {
-            UnityEngine.Debug.Log("AXISSTART");
-            Vector3 point = GetParam<Vector3>(true, param);
-            Space space = GetParam<Space>(param);
-            Action action = GetParam<Action>(param);
-            Timer time = GetParam<Timer>(param);
-            bool cicle = GetParam<bool>(param);
-            Vector3 startPosition = GetStartPosition(obj, space);
-            do
-            {
-                float timer = 0;
-                Vector3 value;
-                if (space == Space.World)
-                    if (action == Action.Straight)
-                        while (timer <= duration)
-                        {
-                            value = Vector3.Lerp(startPosition, point + startPosition, function(timer / duration));
-                            if (point.x != 0)
-                            {
-                                obj.transform.position = new Vector3(value.x, obj.transform.position.y, obj.transform.position.z);
-                            }
-                            if (point.y != 0)
-                            {
-                                obj.transform.position = new Vector3(obj.transform.position.x, value.y, obj.transform.position.z);
-                            }
-                            if (point.z != 0)
-                            {
-                                obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, value.z);
-                            }
-                            yield return timer += TimeScale(time);
-                        }
-                    else
-                        while (timer <= duration)
-                        {
-                            value = Vector3.Lerp(Vector3.zero, point, function(timer / duration));
-                            if (point.x != 0)
-                            {
-                                obj.transform.position += new Vector3(value.x, 0, 0);
-                            }
-                            if (point.y != 0)
-                            {
-                                obj.transform.position += new Vector3(0, value.y, 0);
-                            }
-                            if (point.z != 0)
-                            {
-                                obj.transform.position += new Vector3(0, 0, value.z);
-                            }
-                            yield return timer += TimeScale(time);
-                        }
-                else
-                    if (action == Action.Straight)
-                    while (timer <= duration)
-                    {
-                        value = Vector3.Lerp(startPosition, point, function(timer / duration));
-                        if (point.x != 0)
-                        {
-                            obj.transform.localPosition = new Vector3(value.x, obj.transform.position.y, obj.transform.position.z);
-                        }
-                        if (point.y != 0)
-                        {
-                            obj.transform.localPosition = new Vector3(obj.transform.position.x, value.y, obj.transform.position.z);
-                        }
-                        if (point.z != 0)
-                        {
-                            obj.transform.localPosition = new Vector3(obj.transform.position.x, obj.transform.position.y, value.z);
-                        }
-                        yield return timer += TimeScale(time);
-                    }
-                else
-                    while (timer <= duration)
-                    {
-                        value = Vector3.Lerp(Vector3.zero, point, function(timer / duration));
-                        if (point.x != 0)
-                        {
-                            obj.transform.localPosition += new Vector3(value.x, 0, 0);
-                        }
-                        if (point.y != 0)
-                        {
-                            obj.transform.localPosition += new Vector3(0, value.y, 0);
-                        }
-                        if (point.z != 0)
-                        {
-                            obj.transform.localPosition += new Vector3(0, 0, value.z);
-                        }
-                        yield return timer += TimeScale(time);
-                    }
-                yield return true;                
-            } while (cicle);
-            UnityEngine.Debug.Log("AXISEND");
         }
 
         public static class RigidBody
